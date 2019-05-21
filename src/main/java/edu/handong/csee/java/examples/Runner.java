@@ -1,5 +1,8 @@
 package edu.handong.csee.java.examples;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -9,6 +12,7 @@ import org.apache.commons.cli.Options;
 
 public class Runner {
 	
+	Boolean fullpath;
 	String path;
 	boolean verbose;
 	boolean help;
@@ -29,16 +33,34 @@ public class Runner {
 				return;
 			}
 			
-			// path is required (necessary) data so no need to have a branch.
-			System.out.println("You provided \"" + path + "\" as the value of the option p");
+			int count=0;
+			File dir = new File(path);
+			if(fullpath) {
+				System.out.println("fullpath is " + fullpath + ", you turned on -f option, it will print fullpath name!");
+				
+				for(File file:dir.listFiles()) {
+					try {
+						System.out.println(file.getCanonicalPath());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					count++;
+				}
+			}else {
+				// path is required (necessary) data so no need to have a branch.
+				System.out.println("You provided \"" + path + "\" as the value of the option p");
+				
+				for(File file:dir.listFiles()) {
+						System.out.println(file.getPath());
+				}
+				count++;
+			}
 			
-			// TODO show the number of files in the path
 			
 			if(verbose) {
-				
-				// TODO list all files in the path
-				
-				System.out.println("Your program is terminated. (This message is shown because you turned on -v option!");
+				System.out.println("There was " + count + " numbers of files detected!");
+				System.out.println("Your program is terminated. (This message is shown because you turned on -v option!)");
 			}
 		}
 	}
@@ -49,8 +71,9 @@ public class Runner {
 		try {
 
 			CommandLine cmd = parser.parse(options, args);
-
-			path = cmd.getOptionValue("p");
+			
+			path = cmd.getOptionValue("p"); 
+			fullpath = cmd.hasOption("f");
 			verbose = cmd.hasOption("v");
 			help = cmd.hasOption("h");
 
@@ -72,6 +95,14 @@ public class Runner {
 				.hasArg()
 				.argName("Path name to display")
 				.required()
+				.build());
+		
+		// add options by using OptionBuilder
+		options.addOption(Option.builder("f").longOpt("fullpath")
+				.desc("Set a fullpath of a directory or a file to display")
+				//.hasArg()
+				.argName("FullPath name to display")
+				//.required()
 				.build());
 
 		// add options by using OptionBuilder
