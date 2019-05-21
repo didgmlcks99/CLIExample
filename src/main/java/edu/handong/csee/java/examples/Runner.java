@@ -12,7 +12,7 @@ import org.apache.commons.cli.Options;
 
 public class Runner {
 	
-	Boolean fullpath;
+	boolean fullpath;
 	String path;
 	boolean verbose;
 	boolean help;
