@@ -53,8 +53,8 @@ public class Runner {
 				
 				for(File file:dir.listFiles()) {
 						System.out.println(file.getPath());
+						count++;
 				}
-				count++;
 			}
 			
 			
